@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    container_name: backend_app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev # hot reload during dev
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_db
+    restart: always
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: '${DB_PASSWORD}'
+      MSSQL_PID: 'Developer'
+    ports:
+      - '1433:1433'
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
