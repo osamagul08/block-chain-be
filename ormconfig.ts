@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
+import { resolve } from 'path';
 import * as dotenv from 'dotenv';
 
-dotenv.config();
-
+dotenv.config({ path: '.env.local' });
 export const AppDataSource = new DataSource({
-  type: 'mysql',
+  type: 'mssql' as const,
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT as string, 10),
   username: process.env.DB_USER,
@@ -12,6 +12,10 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   logging: false,
-  entities: [__dirname + '/src/modules/**/entities/*{.ts,.js}'],
+  entities: [resolve(__dirname, 'src/modules/**/entities/*{.ts,.js}')],
   migrations: [__dirname + '/src/migrations/**/*{.ts,.js}'],
+  options: {
+    encrypt: false,
+    trustServerCertificate: true,
+  },
 });
