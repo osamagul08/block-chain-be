@@ -19,18 +19,18 @@ export class AuthChallenge {
   @Column({ type: 'varchar', length: 255 })
   nonce: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 'MAX' }) // Changed from 'text' to 'varchar'
   message: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime2' }) // Changed to datetime2 for better precision
   expiresAt: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'datetime2', nullable: true }) // Changed to datetime2
   usedAt?: Date;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime2' }) // Changed to datetime2
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'datetime2' }) // Changed to datetime2
   updatedAt: Date;
 }

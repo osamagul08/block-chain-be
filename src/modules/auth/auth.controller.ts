@@ -10,7 +10,7 @@ import type { JwtValidatedUser } from './jwt.strategy';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('challenge')
+  @Post('auth-request')
   async requestChallenge(@Body() dto: RequestChallengeDto) {
     return await this.authService.requestChallenge(dto);
   }

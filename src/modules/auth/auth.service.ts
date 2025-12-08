@@ -34,7 +34,7 @@ export class AuthService {
   async requestChallenge({ walletAddress }: RequestChallengeDto) {
     const normalizedAddress = walletAddress.toLowerCase();
 
-    await this.challengeRepository.pruneExpired(normalizedAddress);
+    await this.challengeRepository.deleteExpired(normalizedAddress);
     await this.challengeRepository.invalidateOpenChallenges(normalizedAddress);
 
     const nonce = randomBytes(16).toString('hex');

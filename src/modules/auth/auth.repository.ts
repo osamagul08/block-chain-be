@@ -33,7 +33,7 @@ export class AuthChallengeRepository {
     await this.repo.update(id, { usedAt: new Date() });
   }
 
-  async pruneExpired(walletAddress: string): Promise<void> {
+  async deleteExpired(walletAddress: string): Promise<void> {
     await this.repo.delete({
       walletAddress,
       expiresAt: LessThan(new Date()),
