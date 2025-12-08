@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { LoggerService } from 'src/core/logger/logger.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { Users } from './entities/user.entity';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { Users } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -11,9 +11,9 @@ export class UsersController {
     private readonly logger: LoggerService,
   ) {}
 
-  @Post('signup')
-  async createUser(@Body() userData: CreateUserDto): Promise<Users> {
-    this.logger.log('Creating user with data:');
-    return await this.usersService.createUser(userData);
-  }
+  // @Post('signup')
+  // async createUser(@Body() userData: CreateUserDto): Promise<Users> {
+  //   this.logger.log('Creating user with data:');
+  //   return await this.usersService.createUser(userData);
+  // }
 }

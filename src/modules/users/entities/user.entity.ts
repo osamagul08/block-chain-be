@@ -1,18 +1,27 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 
 @Entity('users')
 export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  fullName: string;
+  @Column({ nullable: true })
+  fullName?: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ unique: true, type: 'varchar', length: 255 })
+  walletAddress: string;
 
-  @Column()
-  password: string;
+  @Column({ unique: true, nullable: true })
+  email?: string;
+
+  @Column({ nullable: true, select: false })
+  password?: string;
 
   @Column({ default: true })
   isActive: boolean;
@@ -26,4 +35,15 @@ export class Users {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @Column({ type: 'datetime', nullable: true })
+  lastLoginAt?: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  normalizeAddress() {
+    if (this.walletAddress) {
+      this.walletAddress = this.walletAddress.toLowerCase();
+    }
+  }
 }

@@ -13,7 +13,7 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
       validationSchema: validationSchema,
-      envFilePath: ['.env.local'],
+      envFilePath: ['.env'],
     }),
     DatabaseModule,
   ],

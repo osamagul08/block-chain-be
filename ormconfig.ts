@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { resolve } from 'path';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 export const AppDataSource = new DataSource({
   type: 'mssql' as const,
   host: process.env.DB_HOST,

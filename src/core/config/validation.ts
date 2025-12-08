@@ -10,4 +10,8 @@ export const validationSchema = Joi.object({
   DB_USER: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  JWT_SECRET: Joi.string().min(4).required(),
+  JWT_EXPIRES_IN: Joi.string().default('15m'),
+  AUTH_MESSAGE_DOMAIN: Joi.string().default('Wallet'),
+  AUTH_MESSAGE_URI: Joi.string().uri().default('http://localhost:3000'),
 });

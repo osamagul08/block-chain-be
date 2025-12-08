@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       ACCEPT_EULA: 'Y'
-      SA_PASSWORD: '${DB_PASSWORD}'
+      SA_PASSWORD: ${DB_PASSWORD}
       MSSQL_PID: 'Developer'
     ports:
       - '1433:1433'

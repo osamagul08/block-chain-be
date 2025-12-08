@@ -10,8 +10,29 @@ export class UsersRepository {
     this.repo = this.dataSource.getRepository(Users);
   }
 
-  async createUser(userData: Partial<Users>): Promise<Users> {
-    const user = this.repo.create(userData);
+  async findByWalletAddress(walletAddress: string): Promise<Users | null> {
+    return await this.repo.findOne({ where: { walletAddress } });
+  }
+
+  async findById(id: string): Promise<Users | null> {
+    return await this.repo.findOne({ where: { id } });
+  }
+
+  async upsertByWallet(
+    walletAddress: string,
+    payload: Partial<Users>,
+  ): Promise<Users> {
+    const normalized = walletAddress.toLowerCase();
+    let user = await this.findByWalletAddress(normalized);
+    if (!user) {
+      user = this.repo.create({ walletAddress: normalized, ...payload });
+    } else {
+      this.repo.merge(user, payload);
+    }
     return await this.repo.save(user);
+  }
+
+  async updateLastLogin(id: string): Promise<void> {
+    await this.repo.update(id, { lastLoginAt: new Date() });
   }
 }
