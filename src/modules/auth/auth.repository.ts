@@ -17,12 +17,12 @@ export class AuthChallengeRepository {
 
   async findValidChallenge(
     walletAddress: string,
-    nonce: string,
+    message: string,
   ): Promise<AuthChallenge | null> {
     return await this.repo.findOne({
       where: {
         walletAddress,
-        nonce,
+        message,
         expiresAt: MoreThan(new Date()),
         usedAt: IsNull(),
       },

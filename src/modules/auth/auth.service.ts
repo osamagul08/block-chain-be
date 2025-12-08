@@ -72,16 +72,20 @@ export class AuthService {
   async verifySignature({
     walletAddress,
     signature,
-    nonce,
+    message,
   }: VerifySignatureDto) {
     const normalizedAddress = walletAddress.toLowerCase();
     const challenge = await this.challengeRepository.findValidChallenge(
       normalizedAddress,
-      nonce,
+      message,
     );
 
     if (!challenge) {
       throw new UnauthorizedException('Challenge not found or expired.');
+    }
+
+    if (challenge.message !== message) {
+      throw new UnauthorizedException('Challenge message mismatch.');
     }
 
     const recoveredAddress = ethers.verifyMessage(challenge.message, signature);

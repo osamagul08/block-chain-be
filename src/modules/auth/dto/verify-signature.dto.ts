@@ -11,5 +11,5 @@ export class VerifySignatureDto {
 
   @IsString()
   @IsNotEmpty()
-  nonce: string;
+  message: string;
 }

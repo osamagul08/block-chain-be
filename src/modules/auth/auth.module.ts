@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule, JwtModuleOptions, JwtSignOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
@@ -12,10 +13,22 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports: [
     PassportModule,
+    ConfigModule,
     UsersModule,
     TypeOrmModule.forFeature([AuthChallenge]),
     JwtModule.registerAsync({
-      useFactory: () => ({}),
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService): JwtModuleOptions => {
+        const expiresInConfig = configService.get<string>('auth.jwtExpiresIn');
+        const signOptions: JwtSignOptions = {
+          expiresIn: (expiresInConfig ?? '15m') as JwtSignOptions['expiresIn'],
+        };
+
+        return {
+          secret: configService.getOrThrow<string>('auth.jwtSecret'),
+          signOptions,
+        };
+      },
     }),
   ],
   providers: [AuthService, AuthChallengeRepository, JwtStrategy],

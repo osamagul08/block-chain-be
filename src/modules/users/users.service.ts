@@ -18,6 +18,10 @@ export class UsersService {
     );
   }
 
+  async findById(id: string): Promise<Users | null> {
+    return await this.usersRepository.findById(id);
+  }
+
   async updateLastLogin(id: string): Promise<void> {
     await this.usersRepository.updateLastLogin(id);
   }
