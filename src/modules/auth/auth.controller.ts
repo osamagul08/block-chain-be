@@ -4,7 +4,7 @@ import { RequestChallengeDto } from './dto/request-challenge.dto';
 import { VerifySignatureDto } from './dto/verify-signature.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import type { JwtValidatedUser } from './strategies/jwt.strategy';
+import type { JwtValidatedUser } from './jwt.strategy';
 
 @Controller('auth')
 export class AuthController {
