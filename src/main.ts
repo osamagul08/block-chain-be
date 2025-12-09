@@ -35,10 +35,10 @@ async function bootstrap() {
     .setDescription(SwaggerDoc.Description)
     .setVersion('1.0.0')
     .addBearerAuth({
-      type: SwaggerDoc.type,
+      type: SwaggerDoc.Bearer.type,
       scheme: 'bearer',
-      bearerFormat: SwaggerDoc.bearerFormat,
-      description: SwaggerDoc.descriptionAuth,
+      bearerFormat: SwaggerDoc.Bearer.bearerFormat,
+      description: SwaggerDoc.Bearer.description,
     })
     .build();
 

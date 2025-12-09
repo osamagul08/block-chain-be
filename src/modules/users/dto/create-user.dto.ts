@@ -1,4 +1,6 @@
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+
 import {
   IsString,
   IsNotEmpty,
@@ -14,14 +16,31 @@ import {
   sanitizeLowercaseString,
   sanitizeString,
 } from '../../../common/utils/sanitize.util';
+import {
+  SwaggerExamples,
+  SwaggerFieldDescriptions,
+} from '../../../common/constants/swagger.constants';
 
 export class CreateUserDto {
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.FullName,
+    example: SwaggerExamples.FullName,
+    required: false,
+    maxLength: 80,
+  })
   @IsString()
   @IsOptional()
   @MaxLength(80)
   @Transform(({ value }) => sanitizeString(value))
   fullName?: string;
 
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.Username,
+    example: SwaggerExamples.Username,
+    required: false,
+    minLength: 3,
+    maxLength: 30,
+  })
   @IsString()
   @IsOptional()
   @MinLength(3)
@@ -33,11 +52,20 @@ export class CreateUserDto {
   @Transform(({ value }) => sanitizeLowercaseString(value))
   username?: string;
 
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.WalletAddress,
+    example: SwaggerExamples.WalletAddress,
+  })
   @IsEthereumAddress()
   @IsNotEmpty()
   @Transform(({ value }) => sanitizeLowercaseString(value))
   walletAddress: string;
 
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.Email,
+    example: SwaggerExamples.Email,
+    required: false,
+  })
   @IsEmail()
   @IsOptional()
   @Transform(({ value }) => sanitizeString(value)?.toLowerCase())

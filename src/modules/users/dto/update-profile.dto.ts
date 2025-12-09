@@ -1,4 +1,5 @@
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
@@ -12,8 +13,18 @@ import {
   sanitizeLowercaseString,
   sanitizeString,
 } from '../../../common/utils/sanitize.util';
+import {
+  SwaggerExamples,
+  SwaggerFieldDescriptions,
+} from '../../../common/constants/swagger.constants';
 
 export class UpdateProfileDto {
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.Username,
+    example: SwaggerExamples.Username,
+    minLength: 3,
+    maxLength: 30,
+  })
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
@@ -25,6 +36,11 @@ export class UpdateProfileDto {
   @Transform(({ value }) => sanitizeLowercaseString(value))
   username: string;
 
+  @ApiProperty({
+    description: SwaggerFieldDescriptions.Email,
+    example: SwaggerExamples.Email,
+    maxLength: 254,
+  })
   @IsEmail()
   @IsNotEmpty()
   @MaxLength(254)

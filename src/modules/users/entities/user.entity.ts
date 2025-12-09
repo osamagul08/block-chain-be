@@ -11,9 +11,6 @@ export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  fullName?: string;
-
   @Column({ unique: true, nullable: true, length: 50 })
   username?: string;
 

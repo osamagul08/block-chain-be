@@ -115,7 +115,6 @@ export class AuthService {
       user: {
         id: user.id,
         walletAddress: user.walletAddress,
-        fullName: user.fullName,
         email: user.email,
         lastLoginAt: user.lastLoginAt,
       },

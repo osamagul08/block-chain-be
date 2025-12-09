@@ -19,7 +19,7 @@ import { Users } from './entities/user.entity';
 
 @ApiTags(SwaggerTags.Profile)
 @ApiBearerAuth()
-@Controller('profile')
+@Controller('user')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
