@@ -1,98 +1,110 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Blockchain Wallet Auth API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Robust NestJS backend for passwordless authentication using Ethereum wallets. The service issues nonce challenges, verifies signed responses, manages user profiles, and exposes a Swagger-documented REST API suitable for decentralized or Web3-enabled applications.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Keep this README updated as the project grows. Add new features, endpoints, or architecture notes as they ship.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+1. **Wallet-based authentication** – Sign-In-With-Ethereum (SIWE) style flow using challenge/response signatures.
+2. **JWT session tokens** – Stateless bearer tokens with configurable expiration.
+3. **User profile management** – Username & email updates tied to unique wallet addresses.
+4. **Centralized logging** – Winston-based structured logger with file outputs for debugging.
+5. **Database access layer** – TypeORM repositories for Microsoft SQL Server.
+6. **Swagger documentation** – Auto-generated docs at `/api/docs` with persisted auth sessions.
+7. **Dockerized local stack** – One command to start API + SQL Server.
 
-```bash
-$ npm install
-```
+## Tech Stack
 
-## Compile and run the project
+- **Runtime**: Node.js, NestJS 11, TypeScript 5
+- **Persistence**: TypeORM 0.3 with Microsoft SQL Server
+- **Auth & Security**: Passport JWT, `ethers` for signature verification, class-validator pipes
+- **Documentation**: @nestjs/swagger, Swagger UI Express
+- **Tooling**: ESLint, Prettier, Jest, Docker Compose
 
-```bash
-# development
-$ npm run start
+## Getting Started
 
-# watch mode
-$ npm run start:dev
+### Prerequisites
 
-# production mode
-$ npm run start:prod
-```
+- Node.js 20+ and npm
+- Docker (optional but recommended for local DB)
+- SQL Server instance (Docker service provided)
 
-## Run tests
+### Installation
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/osamagul08/block-chain-be.git
+cd block-chain-be
+cp .env
+npm install
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Database
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# start SQL Server + API in watch mode
+docker-compose up --build
+
+# run migrations (after containers or local DB are ready)
+npm run migration:run
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+If you prefer a local SQL Server instance, update `.env` with the correct host/credentials and skip Docker.
 
-## Resources
+### Development Server
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run start:dev
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+The API listens on `http://localhost:3000/api` by default. Swagger docs are available at `http://localhost:3000/api/docs`.
 
-## Support
+## Environment Variables
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+All variables are validated in `src/core/config/validation.ts`.
 
-## Stay in touch
+- `PORT` – API port (default `3000`).
+- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` – SQL Server connection.
+- `JWT_SECRET`, `JWT_EXPIRES_IN` – JWT signing.
+- `AUTH_MESSAGE_DOMAIN`, `AUTH_MESSAGE_URI`, `AUTH_CHAIN_ID` – Wallet challenge metadata.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Database Schema
 
-## License
+- `users` – Wallet-linked profiles with optional username/email metadata.
+- `auth` – Nonce challenges with expiry and usage timestamps.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Authentication Flow
+
+1. **Request challenge** – Client sends wallet address to `/api/auth/auth-request`.
+2. **Display message** – API returns nonce + SIWE-style message the wallet must sign.
+3. **Sign & submit** – Client signs the message and posts signature + message to `/api/auth/verify`.
+4. **Verification** – Service checks challenge validity, verifies signature with `ethers`, and upserts the user.
+5. **Token issuance** – JWT is returned with `sub` (user ID) + wallet. Token is required for profile endpoints.
+6. **Profile usage** – Authenticated requests include `Authorization: Bearer <token>` header.
+
+## Deployment Guide
+
+1. **Build the project**
+   ```bash
+   npm run build
+   ```
+2. **Ensure environment variables** – Provide production `.env` or configure host environment (consider using Key Vault/Secrets Manager).
+3. **Database migrations** – Run `npm run migration:run` against the production database.
+4. **Start application**
+   ```bash
+   NODE_ENV=production npm run start:prod
+   ```
+5. **Container deployment (optional)** – Adjust `docker-compose.yml` or craft a production Dockerfile image. Ensure the container links to managed SQL Server and seeds env vars securely.
+6. **Monitoring & logs** – Mount or export `./src/log` directory if you rely on Winston file transports, or configure centralized logging in production.
+
+## Contributing & Maintenance
+
+- Run linting and unit tests before opening PRs.
+- Update API docs and README when adding new controllers, environment variables, or deployment steps.
+- Use feature branches and follow conventional commit messages when possible.
+
+---
+
+Need to update this document? Add changelog entries or inline notes so new contributors can follow along effortlessly.
