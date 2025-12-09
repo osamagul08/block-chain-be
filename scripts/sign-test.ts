@@ -5,7 +5,7 @@ const privateKey =
 const wallet = new Wallet(privateKey);
 
 const message =
-  'Sign in to Wallet\nURI: http://localhost:3000\nWallet: 0xdcb46e0b5f2bee150b3576c5055d2a0fa50330dc\nChain ID: 1\nNonce: 026257809ffb91eeeb2a134eff942725';
+  'Sign in to Wallet\nURI: http://localhost:3000\nWallet: 0xdcb46e0b5f2bee150b3576c5055d2a0fa50330dc\nChain ID: 1\nNonce: 4d780c902c3bd641bcae782b2bd43565';
 
 async function signMessage() {
   const signature = await wallet.signMessage(message);

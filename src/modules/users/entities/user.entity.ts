@@ -14,6 +14,9 @@ export class Users {
   @Column({ nullable: true })
   fullName?: string;
 
+  @Column({ unique: true, nullable: true, length: 50 })
+  username?: string;
+
   @Column({ unique: true, type: 'varchar', length: 255 })
   walletAddress: string;
 

@@ -18,6 +18,22 @@ export class UsersRepository {
     return await this.repo.findOne({ where: { id } });
   }
 
+  async getProfileById(id: string): Promise<Users | null> {
+    return await this.repo.findOne({ where: { id } });
+  }
+
+  async updateProfile(
+    id: string,
+    payload: Pick<Users, 'username' | 'email'>,
+  ): Promise<Users> {
+    await this.repo.update(id, payload);
+    const updated = await this.getProfileById(id);
+    if (!updated) {
+      throw new Error('User not found after update');
+    }
+    return updated;
+  }
+
   async upsertByWallet(
     walletAddress: string,
     payload: Partial<Users>,

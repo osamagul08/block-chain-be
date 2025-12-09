@@ -11,6 +11,7 @@ import { UsersService } from '../users/users.service';
 import { AuthChallengeRepository } from './auth.repository';
 import { RequestChallengeDto } from './dto/request-challenge.dto';
 import { VerifySignatureDto } from './dto/verify-signature.dto';
+import { AuthConfigDefaults } from '../../common/constants/config.constants';
 
 interface LoginMessagePayload {
   domain: string;
@@ -22,7 +23,7 @@ interface LoginMessagePayload {
 
 @Injectable()
 export class AuthService {
-  private readonly challengeTtlMs = 5 * 60 * 1000; // 5 minutes
+  private readonly challengeTtlMs = AuthConfigDefaults.ChallengeTtlMs;
 
   constructor(
     private readonly configService: ConfigService,
@@ -41,13 +42,16 @@ export class AuthService {
     const message = this.buildLoginMessage({
       domain: this.configService.get<string>(
         'auth.loginMessageDomain',
-        'Wallet',
+        AuthConfigDefaults.MessageDomain,
       ),
       uri: this.configService.get<string>(
         'auth.loginMessageUri',
-        'http://localhost:3000',
+        AuthConfigDefaults.MessageUri,
       ),
-      chainId: this.configService.get<number>('auth.chainId', 1),
+      chainId: this.configService.get<number>(
+        'auth.chainId',
+        AuthConfigDefaults.ChainId,
+      ),
       walletAddress: normalizedAddress,
       nonce,
     });

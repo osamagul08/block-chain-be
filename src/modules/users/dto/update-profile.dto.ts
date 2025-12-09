@@ -1,10 +1,8 @@
 import { Transform } from 'class-transformer';
 import {
-  IsString,
-  IsNotEmpty,
   IsEmail,
-  IsOptional,
-  IsEthereumAddress,
+  IsNotEmpty,
+  IsString,
   Matches,
   MaxLength,
   MinLength,
@@ -15,15 +13,9 @@ import {
   sanitizeString,
 } from '../../../common/utils/sanitize.util';
 
-export class CreateUserDto {
+export class UpdateProfileDto {
   @IsString()
-  @IsOptional()
-  @MaxLength(80)
-  @Transform(({ value }) => sanitizeString(value))
-  fullName?: string;
-
-  @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   @MinLength(3)
   @MaxLength(30)
   @Matches(/^[a-z0-9._-]+$/i, {
@@ -31,15 +23,11 @@ export class CreateUserDto {
       'username can only contain letters, numbers, dots, underscores, and hyphens',
   })
   @Transform(({ value }) => sanitizeLowercaseString(value))
-  username?: string;
-
-  @IsEthereumAddress()
-  @IsNotEmpty()
-  @Transform(({ value }) => sanitizeLowercaseString(value))
-  walletAddress: string;
+  username: string;
 
   @IsEmail()
-  @IsOptional()
+  @IsNotEmpty()
+  @MaxLength(254)
   @Transform(({ value }) => sanitizeString(value)?.toLowerCase())
-  email?: string;
+  email: string;
 }

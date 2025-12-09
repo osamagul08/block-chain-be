@@ -1,27 +1,38 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RequestChallengeDto } from './dto/request-challenge.dto';
 import { VerifySignatureDto } from './dto/verify-signature.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { JwtValidatedUser } from './jwt.strategy';
+import { SkipAuth } from '../../common/decorators/skip-auth.decorator';
+import {
+  SwaggerSummary,
+  SwaggerTags,
+} from '../../common/constants/swagger.constants';
 
+@ApiTags(SwaggerTags.Auth)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('auth-request')
+  @SkipAuth()
+  @ApiOperation({ summary: SwaggerSummary.AuthRequestChallenge })
   async requestChallenge(@Body() dto: RequestChallengeDto) {
     return await this.authService.requestChallenge(dto);
   }
 
   @Post('verify')
+  @SkipAuth()
+  @ApiOperation({ summary: SwaggerSummary.AuthVerifySignature })
   async verifySignature(@Body() dto: VerifySignatureDto) {
     return await this.authService.verifySignature(dto);
   }
 
   @Get('profile')
-  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: SwaggerSummary.AuthGetProfile })
   getProfile(@CurrentUser() user: JwtValidatedUser) {
     return { user };
   }

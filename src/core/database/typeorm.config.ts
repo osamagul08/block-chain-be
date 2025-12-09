@@ -5,7 +5,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const typeOrmConfig = (config: ConfigService): TypeOrmModuleOptions => ({
   type: 'mssql',
-  host: config.get<string>('db.host'),
+  host: config.get<string>('db.host', 'db'),
   port: config.get<number>('db.port'),
   username: config.get<string>('db.username'),
   password: config.get<string>('db.password'),
