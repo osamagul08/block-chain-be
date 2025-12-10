@@ -18,7 +18,9 @@ const redactSensitive = (value: unknown): unknown => {
     const entries = Object.entries(value as Record<string, unknown>).map(
       ([key, val]) => [
         key,
-        REDACT_FIELDS.includes(key.toLowerCase()) ? '[REDACTED]' : redactSensitive(val),
+        REDACT_FIELDS.includes(key.toLowerCase())
+          ? '[REDACTED]'
+          : redactSensitive(val),
       ],
     );
     return Object.fromEntries(entries);

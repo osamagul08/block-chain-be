@@ -16,7 +16,7 @@ export const typeOrmConfig = (config: ConfigService): TypeOrmModuleOptions => ({
   autoLoadEntities: true,
   options: { encrypt: true, trustServerCertificate: true },
   extra: {
-    max: 10, // maximum number of connections in the pool
-    min: 2, // minimum number of connections in the pool
+    max: 10,
+    min: 2,
   },
 });
