@@ -37,7 +37,7 @@ export const SwaggerExamples = {
     'Sign in to Wallet\nURI: http://localhost:3000\nWallet: 0x123...\nChain ID: 1\nNonce: 0123456789abcdef',
   FullName: 'Satoshi Nakamoto',
   Username: 'satoshi.n',
-  Email: 'satoshi@example.com',
+  Email: 'satoshi@test.com',
 } as const;
 
 export const SwaggerDoc = {
