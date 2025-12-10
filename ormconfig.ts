@@ -13,9 +13,9 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: [resolve(__dirname, 'src/modules/**/entities/*{.ts,.js}')],
-  migrations: [__dirname + '/src/migrations/**/*{.ts,.js}'],
+  migrations: [resolve(__dirname, 'src/migrations/**/*{.ts,.js}')],
   options: {
-    encrypt: false,
+    encrypt: true,
     trustServerCertificate: true,
   },
 });

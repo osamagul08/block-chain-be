@@ -10,10 +10,11 @@ export const typeOrmConfig = (config: ConfigService): TypeOrmModuleOptions => ({
   username: config.get<string>('db.username'),
   password: config.get<string>('db.password'),
   database: config.get<string>('db.database'),
-  entities: [join(__dirname, 'modules/**/entities/*.entity{.ts,.js}')],
+  // Resolve from compiled dist/core/database to modules directory
+  entities: [join(__dirname, '../../modules/**/entities/*{.ts,.js}')],
   synchronize: false,
   autoLoadEntities: true,
-  options: { encrypt: false },
+  options: { encrypt: true, trustServerCertificate: true },
   extra: {
     max: 10, // maximum number of connections in the pool
     min: 2, // minimum number of connections in the pool

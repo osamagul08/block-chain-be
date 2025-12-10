@@ -1,7 +1,9 @@
 version: '3.9'
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     container_name: backend_app
     ports:
       - '3000:3000'
@@ -15,7 +17,6 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: sh -c "npm install --legacy-peer-deps --include=dev && npm run start:dev" # ensure deps before hot reload
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest

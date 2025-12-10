@@ -7,11 +7,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/exception.filter';
 import { LoggerInterceptor } from './common/interceptors/logger.interceptor';
+import { ResponseInterceptor } from './common/interceptors/response.intercepter';
 import { LoggerService } from './core/logger/logger.service';
 import { SwaggerDoc } from './common/constants/swagger.constants';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
 
   const logger = app.get(LoggerService);
   app.useLogger(logger);
@@ -27,7 +32,10 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalInterceptors(new LoggerInterceptor(logger));
+  app.useGlobalInterceptors(
+    new LoggerInterceptor(logger),
+    new ResponseInterceptor(),
+  );
   app.useGlobalFilters(new AllExceptionsFilter(logger));
 
   const swaggerConfig = new DocumentBuilder()

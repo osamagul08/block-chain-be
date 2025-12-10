@@ -14,4 +14,5 @@ export const validationSchema = Joi.object({
   JWT_EXPIRES_IN: Joi.string().default('15m'),
   AUTH_MESSAGE_DOMAIN: Joi.string().default('Wallet'),
   AUTH_MESSAGE_URI: Joi.string().uri().default('http://localhost:3000'),
+  AUTH_CHAIN_ID: Joi.number().integer().positive().default(1),
 });
