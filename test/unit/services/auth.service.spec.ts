@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import { AuthService } from '../../../src/modules/auth/auth.service';
 import { UsersService } from '../../../src/modules/users/users.service';
 import { AuthChallengeRepository } from '../../../src/modules/auth/auth.repository';
+import { AnomalyDetectionService } from '../../../src/modules/auth/anomaly-detection.service';
 import { AuthConfigDefaults } from '../../../src/common/constants/config.constants';
 
 jest.mock('crypto', () => {
@@ -36,6 +37,11 @@ describe('AuthService', () => {
     findValidChallenge: jest.Mock;
     markUsed: jest.Mock;
   };
+  let anomalyDetection: {
+    isBlocked: jest.Mock;
+    recordFailedAttempt: jest.Mock;
+    resetFailedAttempts: jest.Mock;
+  };
 
   beforeEach(async () => {
     configService = {
@@ -55,6 +61,11 @@ describe('AuthService', () => {
       findValidChallenge: jest.fn(),
       markUsed: jest.fn(),
     };
+    anomalyDetection = {
+      isBlocked: jest.fn().mockReturnValue(false),
+      recordFailedAttempt: jest.fn(),
+      resetFailedAttempts: jest.fn(),
+    };
 
     randomBytesMock.mockReset();
 
@@ -65,6 +76,7 @@ describe('AuthService', () => {
         { provide: JwtService, useValue: jwtService },
         { provide: UsersService, useValue: usersService },
         { provide: AuthChallengeRepository, useValue: challengeRepository },
+        { provide: AnomalyDetectionService, useValue: anomalyDetection },
       ],
     }).compile();
 

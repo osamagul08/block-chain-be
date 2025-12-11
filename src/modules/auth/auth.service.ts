@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -12,6 +13,7 @@ import { AuthChallengeRepository } from './auth.repository';
 import { RequestChallengeDto } from './dto/request-challenge.dto';
 import { VerifySignatureDto } from './dto/verify-signature.dto';
 import { AuthConfigDefaults } from '../../common/constants/config.constants';
+import { AnomalyDetectionService } from './anomaly-detection.service';
 
 interface LoginMessagePayload {
   domain: string;
@@ -30,6 +32,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly challengeRepository: AuthChallengeRepository,
+    private readonly anomalyDetection: AnomalyDetectionService,
   ) {}
 
   async requestChallenge({ walletAddress }: RequestChallengeDto) {
@@ -79,46 +82,74 @@ export class AuthService {
     message,
   }: VerifySignatureDto) {
     const normalizedAddress = walletAddress.toLowerCase();
-    const challenge = await this.challengeRepository.findValidChallenge(
-      normalizedAddress,
-      message,
-    );
 
-    if (!challenge) {
-      throw new UnauthorizedException('Challenge not found or expired.');
-    }
-
-    if (challenge.message !== message) {
-      throw new UnauthorizedException('Challenge message mismatch.');
-    }
-
-    const recoveredAddress = ethers.verifyMessage(challenge.message, signature);
-
-    if (recoveredAddress.toLowerCase() !== normalizedAddress) {
-      throw new UnauthorizedException(
-        'Signature does not match wallet address.',
+    // Check if wallet is blocked due to too many failed attempts
+    if (this.anomalyDetection.isBlocked(normalizedAddress)) {
+      throw new ForbiddenException(
+        'Too many failed login attempts. Please try again later.',
       );
     }
 
-    await this.challengeRepository.markUsed(challenge.id);
+    try {
+      const challenge = await this.challengeRepository.findValidChallenge(
+        normalizedAddress,
+        message,
+      );
 
-    const user = await this.usersService.upsertWalletUser({
-      walletAddress: normalizedAddress,
-    });
-    await this.usersService.updateLastLogin(user.id);
+      if (!challenge) {
+        this.anomalyDetection.recordFailedAttempt(normalizedAddress);
+        throw new UnauthorizedException('Challenge not found or expired.');
+      }
 
-    const payload = { sub: user.id, walletAddress: user.walletAddress };
-    const accessToken = await this.jwtService.signAsync(payload);
+      if (challenge.message !== message) {
+        this.anomalyDetection.recordFailedAttempt(normalizedAddress);
+        throw new UnauthorizedException('Challenge message mismatch.');
+      }
 
-    return {
-      accessToken,
-      user: {
-        id: user.id,
-        walletAddress: user.walletAddress,
-        email: user.email,
-        lastLoginAt: user.lastLoginAt,
-      },
-    };
+      const recoveredAddress = ethers.verifyMessage(
+        challenge.message,
+        signature,
+      );
+
+      if (recoveredAddress.toLowerCase() !== normalizedAddress) {
+        this.anomalyDetection.recordFailedAttempt(normalizedAddress);
+        throw new UnauthorizedException(
+          'Signature does not match wallet address.',
+        );
+      }
+
+      // All checks passed - successful login
+      await this.challengeRepository.markUsed(challenge.id);
+
+      const user = await this.usersService.upsertWalletUser({
+        walletAddress: normalizedAddress,
+      });
+      await this.usersService.updateLastLogin(user.id);
+
+      // Reset failed attempts on successful login
+      this.anomalyDetection.resetFailedAttempts(normalizedAddress);
+
+      const payload = { sub: user.id, walletAddress: user.walletAddress };
+      const accessToken = await this.jwtService.signAsync(payload);
+
+      return {
+        accessToken,
+        user: {
+          id: user.id,
+          walletAddress: user.walletAddress,
+          email: user.email,
+          lastLoginAt: user.lastLoginAt,
+        },
+      };
+    } catch (error) {
+      // If it's already an UnauthorizedException, it was already recorded
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      // For any other unexpected errors, record as failed attempt
+      this.anomalyDetection.recordFailedAttempt(normalizedAddress);
+      throw error;
+    }
   }
 
   private buildLoginMessage({

@@ -13,7 +13,7 @@ import {
   SwaggerTags,
 } from '../../common/constants/swagger.constants';
 import { UsersService } from './users.service';
-import { LoggerService } from 'src/core/logger/logger.service';
+import { LoggerService } from '../../core/logger/logger.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Users } from './entities/user.entity';
 

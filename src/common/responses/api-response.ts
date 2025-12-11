@@ -1,30 +1,22 @@
 // src/common/responses/api-response.ts
 export interface ApiResponse<T> {
-  statusCode: number;
-  message: string;
   success: boolean;
   data?: T;
-  error?: string | object;
+  timestamp: string;
 }
 
-export const createSuccessResponse = <T>(
-  data: T,
-  message: string = 'Success',
-  statusCode: number = 200,
-): ApiResponse<T> => ({
-  statusCode,
-  success: true,
-  message,
-  data,
-});
+export interface ApiErrorResponse {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+    details?: unknown[];
+  };
+  timestamp: string;
+}
 
-export const createErrorResponse = (
-  message: string,
-  error: string | object,
-  statusCode: number = 500,
-): ApiResponse<null> => ({
-  statusCode,
-  success: false,
-  message,
-  error,
+export const createSuccessResponse = <T>(data: T): ApiResponse<T> => ({
+  success: true,
+  data,
+  timestamp: new Date().toISOString(),
 });

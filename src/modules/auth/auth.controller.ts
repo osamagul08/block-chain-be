@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RequestChallengeDto } from './dto/request-challenge.dto';
@@ -18,6 +19,7 @@ export class AuthController {
 
   @Post('auth-request')
   @SkipAuth()
+  @Throttle({ default: { limit: 5, ttl: 900000 } }) // 5 requests per 15 minutes
   @ApiOperation({ summary: SwaggerSummary.AuthRequestChallenge })
   async requestChallenge(@Body() dto: RequestChallengeDto) {
     return await this.authService.requestChallenge(dto);
@@ -25,6 +27,7 @@ export class AuthController {
 
   @Post('verify')
   @SkipAuth()
+  @Throttle({ default: { limit: 5, ttl: 900000 } }) // 5 requests per 15 minutes
   @ApiOperation({ summary: SwaggerSummary.AuthVerifySignature })
   async verifySignature(@Body() dto: VerifySignatureDto) {
     return await this.authService.verifySignature(dto);

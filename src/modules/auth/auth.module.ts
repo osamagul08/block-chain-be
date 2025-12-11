@@ -9,6 +9,7 @@ import { AuthChallenge } from './entities/auth.entity';
 import { AuthChallengeRepository } from './auth.repository';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './jwt.strategy';
+import { AnomalyDetectionService } from './anomaly-detection.service';
 
 @Module({
   imports: [
@@ -31,7 +32,12 @@ import { JwtStrategy } from './jwt.strategy';
       },
     }),
   ],
-  providers: [AuthService, AuthChallengeRepository, JwtStrategy],
+  providers: [
+    AuthService,
+    AuthChallengeRepository,
+    JwtStrategy,
+    AnomalyDetectionService,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })

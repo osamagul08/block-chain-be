@@ -61,5 +61,11 @@ async function bootstrap() {
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap().catch((err) => {
-  console.error('Error during bootstrap:', err);
+  const bootstrapLogger = new LoggerService();
+  bootstrapLogger.error(
+    `Error during bootstrap: ${err instanceof Error ? err.message : String(err)}`,
+    err instanceof Error ? err.stack : undefined,
+    'Bootstrap',
+  );
+  process.exit(1);
 });

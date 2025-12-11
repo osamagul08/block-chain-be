@@ -56,9 +56,9 @@ export class CreateUserDto {
     description: SwaggerFieldDescriptions.WalletAddress,
     example: SwaggerExamples.WalletAddress,
   })
+  @Transform(({ value }) => value?.toLowerCase().trim())
   @IsEthereumAddress()
   @IsNotEmpty()
-  @Transform(({ value }) => sanitizeLowercaseString(value))
   walletAddress: string;
 
   @ApiProperty({

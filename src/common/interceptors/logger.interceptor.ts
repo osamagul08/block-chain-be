@@ -7,7 +7,8 @@ import {
 import { LoggerService } from '../../core/logger/logger.service';
 import { Observable, tap } from 'rxjs';
 
-const REDACT_FIELDS = ['authorization', 'password', 'token', 'signature'];
+const SIGNATURE_VISIBLE_LENGTH = 10;
+const WALLET_SUFFIX_LENGTH = 6;
 
 const redactSensitive = (value: unknown): unknown => {
   if (Array.isArray(value)) {
@@ -15,15 +16,33 @@ const redactSensitive = (value: unknown): unknown => {
   }
 
   if (value && typeof value === 'object') {
-    const entries = Object.entries(value as Record<string, unknown>).map(
-      ([key, val]) => [
-        key,
-        REDACT_FIELDS.includes(key.toLowerCase())
-          ? '[REDACTED]'
-          : redactSensitive(val),
-      ],
-    );
-    return Object.fromEntries(entries);
+    const redactedEntries = Object.entries(value as Record<string, unknown>)
+      .map(([key, val]) => {
+        const lowerKey = key.toLowerCase();
+
+        if (lowerKey === 'authorization') {
+          return null;
+        }
+
+        if (lowerKey === 'signature' && typeof val === 'string') {
+          const visible = val.slice(0, SIGNATURE_VISIBLE_LENGTH);
+          const masked =
+            val.length > SIGNATURE_VISIBLE_LENGTH ? `${visible}...` : visible;
+          return [key, masked];
+        }
+
+        if (lowerKey === 'walletaddress' && typeof val === 'string') {
+          const suffix = val.slice(-WALLET_SUFFIX_LENGTH);
+          const maskedPrefix = val.startsWith('0x') ? '0x...' : '...';
+          const masked = suffix ? `${maskedPrefix}${suffix}` : maskedPrefix;
+          return [key, masked];
+        }
+
+        return [key, redactSensitive(val)];
+      })
+      .filter((entry): entry is [string, unknown] => entry !== null);
+
+    return Object.fromEntries(redactedEntries);
   }
 
   return value;
