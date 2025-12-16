@@ -13,23 +13,23 @@ services:
       - .env
     environment:
       DB_HOST: db
-      DB_PORT: 1433
+      DB_PORT: 5432
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
 
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver_db
+    image: postgres:15-alpine
+    container_name: postgres_db
     restart: always
     environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: ${DB_PASSWORD}
-      MSSQL_PID: 'Developer'
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - '1433:1433'
+      - '5432:5432'
     volumes:
-      - mssql_data:/var/opt/mssql
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  mssql_data:
+  postgres_data:

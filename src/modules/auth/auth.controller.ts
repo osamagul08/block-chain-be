@@ -22,6 +22,7 @@ export class AuthController {
   @Throttle({ default: { limit: 5, ttl: 900000 } }) // 5 requests per 15 minutes
   @ApiOperation({ summary: SwaggerSummary.AuthRequestChallenge })
   async requestChallenge(@Body() dto: RequestChallengeDto) {
+    //test comments
     return await this.authService.requestChallenge(dto);
   }
 

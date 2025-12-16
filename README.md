@@ -66,7 +66,7 @@ The API listens on `http://localhost:3000/api` by default. Swagger docs are avai
 All variables are validated in `src/core/config/validation.ts`.
 
 - `PORT` – API port (default `3000`).
-- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` – SQL Server connection.
+- `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME` – SQL Server connection.
 - `JWT_SECRET`, `JWT_EXPIRES_IN` – JWT signing.
 - `AUTH_MESSAGE_DOMAIN`, `AUTH_MESSAGE_URI`, `AUTH_CHAIN_ID` – Wallet challenge metadata.
 
