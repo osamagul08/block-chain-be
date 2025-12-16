@@ -4,8 +4,8 @@ import { join } from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const typeOrmConfig = (config: ConfigService): TypeOrmModuleOptions => ({
-  type: 'mssql',
-  host: config.get<string>('db.host', 'db'),
+  type: 'postgres',
+  host: config.get<string>('db.host', 'localhost'),
   port: config.get<number>('db.port'),
   username: config.get<string>('db.username'),
   password: config.get<string>('db.password'),
@@ -14,7 +14,6 @@ export const typeOrmConfig = (config: ConfigService): TypeOrmModuleOptions => ({
   entities: [join(__dirname, '../../modules/**/entities/*{.ts,.js}')],
   synchronize: false,
   autoLoadEntities: true,
-  options: { encrypt: true, trustServerCertificate: true },
   extra: {
     max: 10,
     min: 2,
