@@ -15,4 +15,10 @@ export const validationSchema = Joi.object({
   AUTH_MESSAGE_DOMAIN: Joi.string().default('Wallet'),
   AUTH_MESSAGE_URI: Joi.string().uri().default('http://localhost:3000'),
   AUTH_CHAIN_ID: Joi.number().integer().positive().default(1),
+  SOLANA_RPC_URL: Joi.string().uri(),
+  QUICKNODE_RPC_URL: Joi.string().uri(),
+  USDC_MINT_ADDRESS: Joi.string(),
+  HELIUS_API_KEY: Joi.string(),
+  HELIUS_WEBHOOK_URL: Joi.string().uri(),
+  HELIUS_WEBHOOK_SECRET: Joi.string(),
 });

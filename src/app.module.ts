@@ -6,12 +6,20 @@ import { CoreModule } from './core/core.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { WalletModule } from './modules/wallet/wallet.module';
+import { DepositModule } from './modules/deposit/deposit.module';
 import { UsersController } from './modules/users/users.controller';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { ThrottlerConfig } from './core/config/throttler.config';
 
 @Module({
-  imports: [CoreModule, UsersModule, AuthModule, WalletModule, ThrottlerConfig],
+  imports: [
+    CoreModule,
+    UsersModule,
+    AuthModule,
+    WalletModule,
+    DepositModule,
+    ThrottlerConfig,
+  ],
   controllers: [UsersController],
   providers: [
     {

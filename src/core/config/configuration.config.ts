@@ -23,4 +23,14 @@ export default () => ({
       10,
     ),
   },
+  solana: {
+    rpcUrl: `${process.env.SOLANA_RPC_URL}?api-key=${process.env.HELIUS_API_KEY}`,
+    backupRpcUrl: process.env.QUICKNODE_RPC_URL,
+    usdcMintAddress: process.env.USDC_MINT_ADDRESS,
+    helius: {
+      apiKey: process.env.HELIUS_API_KEY,
+      webhookUrl: process.env.HELIUS_WEBHOOK_URL,
+      webhookSecret: process.env.HELIUS_WEBHOOK_SECRET,
+    },
+  },
 });

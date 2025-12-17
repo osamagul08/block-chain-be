@@ -12,8 +12,8 @@ import configuration from './config/configuration.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
-      validationSchema: validationSchema,
       envFilePath: ['.env'],
+      validationSchema: validationSchema,
     }),
     DatabaseModule,
   ],

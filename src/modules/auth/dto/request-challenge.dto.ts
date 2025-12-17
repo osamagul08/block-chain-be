@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEthereumAddress, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 import {
   SwaggerExamples,
@@ -13,7 +13,6 @@ export class RequestChallengeDto {
     example: SwaggerExamples.WalletAddress,
   })
   @Transform(({ value }) => value?.toLowerCase().trim())
-  @IsEthereumAddress()
   @IsNotEmpty()
   walletAddress: string;
 }
